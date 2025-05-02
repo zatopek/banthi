@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState, useEffect, useRef, ChangeEvent, MouseEvent, use } from 'react';
+import React, { useState, useEffect, useRef, ChangeEvent, MouseEvent } from 'react';
 // Corrected icon import
 import { Plus, Minus, Play, Pause, RotateCcw, Edit, UserPlus, Trash2, LogIn, LogOut, Clock, StopCircle, FileText, X, Volleyball } from 'lucide-react';
 import { JSX } from 'react/jsx-runtime';
@@ -274,7 +274,7 @@ const Home: React.FC = () => { // Use React.FC for functional component typing
           const currentPosition = player.position;
           const newTotalTime = (player.totalTimePlayed || 0) + 1;
           const newTimeByPosition = { ...(player.timeByPosition || initialTimeByPosition()) };
-          if (currentPosition && currentPosition !== '-') {
+          if (currentPosition) {
              // Ensure the key exists before accessing
              if (newTimeByPosition.hasOwnProperty(currentPosition)) {
                  newTimeByPosition[currentPosition] = (newTimeByPosition[currentPosition] || 0) + 1;
@@ -410,7 +410,17 @@ const Home: React.FC = () => { // Use React.FC for functional component typing
              <div className={`text-lg font-semibold mb-1 ${isInAddedTime ? 'text-red-600' : 'text-gray-700'}`}>{getPeriodDisplay(gamePeriod, timeLeft === 0 && addedTimeElapsed > 0)}</div>
              <div className={`text-5xl sm:text-6xl font-mono font-semibold ${isInAddedTime ? 'text-red-500' : 'text-gray-800'}`}> {timeLeft > 0 ? formatTime(timeLeft) : `${formatTime(addedTimeElapsed)}`} {isInAddedTime && <span className="text-2xl align-baseline"> +AT</span>} </div>
              <div className="flex space-x-3 items-center h-10">
-                 {(gamePeriod === GamePeriod.FIRST_HALF || gamePeriod === GamePeriod.SECOND_HALF || gamePeriod === GamePeriod.HALF_TIME) && ( <Button onClick={gamePeriod === GamePeriod.HALF_TIME ? handleStartNextHalf : handleTimerControl} variant="primary" className="w-28" disabled={gamePeriod === GamePeriod.FULL_TIME} title={getTimerButtonText()}> {getTimerButtonIcon()} <span className="ml-1.5">{getTimerButtonText()}</span> </Button> )}
+                 {
+                 (gamePeriod === GamePeriod.FIRST_HALF || gamePeriod === GamePeriod.SECOND_HALF || gamePeriod === GamePeriod.HALF_TIME) 
+                 && 
+                 ( <Button onClick={gamePeriod === GamePeriod.HALF_TIME ? handleStartNextHalf : handleTimerControl} 
+                 variant="primary" 
+                 className="w-28" 
+                 title={getTimerButtonText()}> 
+                    {getTimerButtonIcon()} 
+                    <span className="ml-1.5">{getTimerButtonText()}</span> 
+                </Button> )
+                }
                  {isTimerActive && (timeLeft === 0 && addedTimeElapsed >= 0) && (gamePeriod === GamePeriod.FIRST_HALF || gamePeriod === GamePeriod.SECOND_HALF) && ( <Button onClick={handleEndHalf} variant="danger" className="w-28" title="Manually End Half"> <StopCircle size={18} /> <span className="ml-1.5">End Half</span> </Button> )}
                  {gamePeriod === GamePeriod.FULL_TIME && ( <span className="font-semibold text-gray-600">Game Over</span> )}
              </div>
